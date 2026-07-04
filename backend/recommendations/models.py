@@ -36,7 +36,7 @@ class GameAIAnalysis(models.Model):
     pattern_analysis = models.TextField()
     metrics = models.JSONField(default=dict, blank=True)
     price_fingerprint = models.CharField(max_length=64)
-    prompt_version = models.CharField(max_length=40)
+    prompt_version = models.CharField(max_length=80)
     generated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -62,7 +62,7 @@ class UserGameAIAnalysis(models.Model):
     pattern_analysis = models.TextField()
     metrics = models.JSONField(default=dict, blank=True)
     input_fingerprint = models.CharField(max_length=64)
-    prompt_version = models.CharField(max_length=40)
+    prompt_version = models.CharField(max_length=80)
     generated_at = models.DateTimeField(auto_now=True)
 
     class Meta:

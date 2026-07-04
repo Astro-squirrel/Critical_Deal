@@ -172,11 +172,18 @@ const HERO_AUTOPLAY_MS = 5000
 const HOME_DEAL_LIMIT = 10
 const HOME_PERSONALIZED_LIMIT = 3
 
-const heroGames = computed(() => popular.value.slice(0, 4))
-const dealList = computed(() => popular.value.slice(0, HOME_DEAL_LIMIT))
-const wishlistPreview = computed(() => wishlistItems.value.slice(0, 4))
-const freeGamesPreview = computed(() => freeGames.value.slice(0, 4))
-const personalizedPreview = computed(() => personalizedGames.value.slice(0, HOME_PERSONALIZED_LIMIT))
+const asList = (value) => {
+  if (Array.isArray(value)) return value
+  if (Array.isArray(value?.data)) return value.data
+  if (Array.isArray(value?.results)) return value.results
+  return []
+}
+
+const heroGames = computed(() => asList(popular.value).slice(0, 4))
+const dealList = computed(() => asList(popular.value).slice(0, HOME_DEAL_LIMIT))
+const wishlistPreview = computed(() => asList(wishlistItems.value).slice(0, 4))
+const freeGamesPreview = computed(() => asList(freeGames.value).slice(0, 4))
+const personalizedPreview = computed(() => asList(personalizedGames.value).slice(0, HOME_PERSONALIZED_LIMIT))
 const personalizedEmptyLines = computed(() => {
   if (personalizedState.value === 'error') return ['취향 추천을 불러오지 못했습니다.']
   return ['Steam 계정을 연동하면', '사용자 취향에 맞는 게임 추천을 받을 수 있습니다.']
@@ -275,11 +282,11 @@ onMounted(async () => {
     wishlistApi.list(),
     recommendationsApi.homePersonalized(HOME_PERSONALIZED_LIMIT),
   ])
-  if (popularResult.status === 'fulfilled') popular.value = popularResult.value
-  if (freeResult.status === 'fulfilled') freeGames.value = freeResult.value
-  if (wishlistResult.status === 'fulfilled') wishlistItems.value = wishlistResult.value
+  if (popularResult.status === 'fulfilled') popular.value = asList(popularResult.value)
+  if (freeResult.status === 'fulfilled') freeGames.value = asList(freeResult.value)
+  if (wishlistResult.status === 'fulfilled') wishlistItems.value = asList(wishlistResult.value)
   if (personalizedResult.status === 'fulfilled') {
-    personalizedGames.value = personalizedResult.value?.items || []
+    personalizedGames.value = asList(personalizedResult.value?.items)
     personalizedState.value = personalizedGames.value.length ? 'ready' : 'connect'
   } else {
     personalizedState.value = [401, 403].includes(personalizedResult.reason?.status) ? 'connect' : 'error'

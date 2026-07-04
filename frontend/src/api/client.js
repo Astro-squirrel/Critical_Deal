@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const apiBaseURL = () => {
   const explicitBaseURL = import.meta.env.VITE_API_BASE_URL
-  if (explicitBaseURL) return explicitBaseURL.replace(/\/$/, '')
+  if (explicitBaseURL) return normalizeApiBaseURL(explicitBaseURL)
 
   const apiHost = import.meta.env.VITE_API_HOST
   if (apiHost) {
@@ -12,6 +12,13 @@ const apiBaseURL = () => {
 
   return 'http://127.0.0.1:8000/api'
 }
+
+const normalizeApiBaseURL = (value) =>
+  String(value)
+    .trim()
+    .replace(/^VITE_API_BASE_URL=/, '')
+    .replace(/^['"]|['"]$/g, '')
+    .replace(/\/$/, '')
 
 export const api = axios.create({
   baseURL: apiBaseURL(),

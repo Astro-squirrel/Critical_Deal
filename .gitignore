@@ -13,5 +13,6 @@ dist/
 *.log
 backend/media/
 backend/staticfiles/
+backend/data.json
 frontend/.env
 frontend/.env.local
